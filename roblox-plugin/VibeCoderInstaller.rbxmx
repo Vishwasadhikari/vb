@@ -1,0 +1,271 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" version="4">
+  <Item class="Script" referent="RBX0">
+    <Properties>
+      <string name="Name">VibeCoderInstaller</string>
+      <bool name="Disabled">false</bool>
+      <string name="Source">-- VibeCoder Installer Plugin (paste into a Studio Plugin script)
+-- Usage:
+-- 1) In the web app, generate code.
+-- 2) Click &quot;Copy Plugin Bundle&quot;.
+-- 3) In Roblox Studio, open this plugin, paste JSON, click &quot;Build&quot;.
+
+local HttpService = game:GetService(&quot;HttpService&quot;)
+local StudioService = game:GetService(&quot;StudioService&quot;)
+
+local PLUGIN_TITLE = &quot;VibeCoder Installer&quot;
+local BUNDLE_TYPE = &quot;vibecoder_plugin_bundle_v1&quot;
+
+local toolbar = plugin:CreateToolbar(&quot;VibeCoder&quot;)
+local button = toolbar:CreateButton(&quot;Installer&quot;, &quot;Open VibeCoder Installer&quot;, &quot;rbxassetid://4458901886&quot;)
+button.ClickableWhenViewportHidden = true
+
+local widgetInfo = DockWidgetPluginGuiInfo.new(
+	Enum.InitialDockState.Right,
+	false,
+	false,
+	420,
+	520,
+	340,
+	420
+)
+
+local widget = plugin:CreateDockWidgetPluginGui(&quot;VibeCoderInstallerWidget&quot;, widgetInfo)
+widget.Title = PLUGIN_TITLE
+
+local root = Instance.new(&quot;Frame&quot;)
+root.BackgroundColor3 = Color3.fromRGB(20, 23, 33)
+root.BorderSizePixel = 0
+root.Size = UDim2.fromScale(1, 1)
+root.Parent = widget
+
+local header = Instance.new(&quot;TextLabel&quot;)
+header.BackgroundTransparency = 1
+header.Size = UDim2.new(1, -24, 0, 24)
+header.Position = UDim2.new(0, 12, 0, 10)
+header.Font = Enum.Font.GothamBold
+header.TextSize = 16
+header.TextColor3 = Color3.fromRGB(229, 231, 235)
+header.TextXAlignment = Enum.TextXAlignment.Left
+header.Text = &quot;Paste Plugin Bundle JSON&quot;
+header.Parent = root
+
+local hint = Instance.new(&quot;TextLabel&quot;)
+hint.BackgroundTransparency = 1
+hint.Size = UDim2.new(1, -24, 0, 34)
+hint.Position = UDim2.new(0, 12, 0, 36)
+hint.Font = Enum.Font.Gotham
+hint.TextSize = 12
+hint.TextColor3 = Color3.fromRGB(148, 163, 184)
+hint.TextXAlignment = Enum.TextXAlignment.Left
+hint.TextYAlignment = Enum.TextYAlignment.Top
+hint.TextWrapped = true
+hint.Text = &quot;In the web app: Generate → Copy Plugin Bundle. Paste here and click Build. This will create Scripts in the right services.&quot;
+hint.Parent = root
+
+local box = Instance.new(&quot;TextBox&quot;)
+box.ClearTextOnFocus = false
+box.MultiLine = true
+box.TextXAlignment = Enum.TextXAlignment.Left
+box.TextYAlignment = Enum.TextYAlignment.Top
+box.Font = Enum.Font.Code
+box.TextSize = 12
+box.TextColor3 = Color3.fromRGB(229, 231, 235)
+box.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
+box.BorderSizePixel = 0
+box.Size = UDim2.new(1, -24, 1, -150)
+box.Position = UDim2.new(0, 12, 0, 76)
+box.Text = &quot;&quot;
+box.Parent = root
+
+local boxCorner = Instance.new(&quot;UICorner&quot;)
+boxCorner.CornerRadius = UDim.new(0, 10)
+boxCorner.Parent = box
+
+local status = Instance.new(&quot;TextLabel&quot;)
+status.BackgroundTransparency = 1
+status.Size = UDim2.new(1, -24, 0, 40)
+status.Position = UDim2.new(0, 12, 1, -68)
+status.Font = Enum.Font.Gotham
+status.TextSize = 12
+status.TextColor3 = Color3.fromRGB(148, 163, 184)
+status.TextXAlignment = Enum.TextXAlignment.Left
+status.TextYAlignment = Enum.TextYAlignment.Top
+status.TextWrapped = true
+status.Text = &quot;Ready.&quot;
+status.Parent = root
+
+local buttonRow = Instance.new(&quot;Frame&quot;)
+buttonRow.BackgroundTransparency = 1
+buttonRow.Size = UDim2.new(1, -24, 0, 38)
+buttonRow.Position = UDim2.new(0, 12, 1, -38)
+buttonRow.Parent = root
+
+local buildBtn = Instance.new(&quot;TextButton&quot;)
+buildBtn.Size = UDim2.new(0, 120, 1, 0)
+buildBtn.Position = UDim2.new(0, 0, 0, 0)
+buildBtn.Font = Enum.Font.GothamBold
+buildBtn.TextSize = 14
+buildBtn.TextColor3 = Color3.fromRGB(34, 211, 238)
+buildBtn.BackgroundColor3 = Color3.fromRGB(24, 48, 62)
+buildBtn.BorderSizePixel = 0
+buildBtn.Text = &quot;Build&quot;
+buildBtn.Parent = buttonRow
+
+local clearBtn = Instance.new(&quot;TextButton&quot;)
+clearBtn.Size = UDim2.new(0, 120, 1, 0)
+clearBtn.Position = UDim2.new(0, 130, 0, 0)
+clearBtn.Font = Enum.Font.GothamBold
+clearBtn.TextSize = 14
+clearBtn.TextColor3 = Color3.fromRGB(148, 163, 184)
+clearBtn.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+clearBtn.BorderSizePixel = 0
+clearBtn.Text = &quot;Clear&quot;
+clearBtn.Parent = buttonRow
+
+local corners1 = Instance.new(&quot;UICorner&quot;)
+corners1.CornerRadius = UDim.new(0, 10)
+corners1.Parent = buildBtn
+local corners2 = Instance.new(&quot;UICorner&quot;)
+corners2.CornerRadius = UDim.new(0, 10)
+corners2.Parent = clearBtn
+
+local function getServiceRoot(serviceName: string)
+	if serviceName == &quot;Workspace&quot; then
+		return workspace
+	end
+	local ok, svc = pcall(function()
+		return game:GetService(serviceName)
+	end)
+	if ok and svc then
+		return svc
+	end
+	return nil
+end
+
+local function ensureFolder(parent: Instance, name: string)
+	local existing = parent:FindFirstChild(name)
+	if existing and existing:IsA(&quot;Folder&quot;) then
+		return existing
+	end
+	local folder = Instance.new(&quot;Folder&quot;)
+	folder.Name = name
+	folder.Parent = parent
+	return folder
+end
+
+local function splitPath(path: string)
+	local parts = {}
+	for part in string.gmatch(path, &quot;[^/]+&quot;) do
+		table.insert(parts, part)
+	end
+	return parts
+end
+
+local function installScript(entry)
+	local path = tostring(entry.path or &quot;&quot;)
+	local className = tostring(entry.className or &quot;Script&quot;)
+	local source = tostring(entry.source or &quot;&quot;)
+	if path == &quot;&quot; or source == &quot;&quot; then
+		return false, &quot;Missing path/source&quot;
+	end
+
+	local parts = splitPath(path)
+	local rootName = parts[1]
+	local rootInst = getServiceRoot(rootName)
+	if not rootInst then
+		return false, &quot;Unknown root: &quot; .. rootName
+	end
+
+	-- Build folders for intermediate segments
+	local parent = rootInst
+	for i = 2, #parts - 1 do
+		parent = ensureFolder(parent, parts[i])
+	end
+
+	local scriptName = parts[#parts] or &quot;VibeCoderScript&quot;
+	local scriptObj = Instance.new(className == &quot;LocalScript&quot; and &quot;LocalScript&quot; or &quot;Script&quot;)
+	scriptObj.Name = scriptName
+	scriptObj.Source = source
+	scriptObj.Parent = parent
+
+	return true, path
+end
+
+local function decodeBundle(text: string)
+	local ok, decoded = pcall(function()
+		return HttpService:JSONDecode(text)
+	end)
+	if not ok then
+		return nil, &quot;Invalid JSON&quot;
+	end
+	if type(decoded) ~= &quot;table&quot; or decoded.type ~= BUNDLE_TYPE then
+		return nil, &quot;Not a VibeCoder bundle&quot;
+	end
+	if type(decoded.scripts) ~= &quot;table&quot; then
+		return nil, &quot;Bundle missing scripts&quot;
+	end
+	return decoded, nil
+end
+
+buildBtn.MouseButton1Click:Connect(function()
+	local text = box.Text or &quot;&quot;
+	if text:gsub(&quot;%s+&quot;, &quot;&quot;) == &quot;&quot; then
+		status.Text = &quot;Paste the bundle JSON first.&quot;
+		return
+	end
+
+	local bundle, err = decodeBundle(text)
+	if not bundle then
+		status.Text = &quot;Error: &quot; .. tostring(err)
+		return
+	end
+
+	local created = 0
+	local failures = {}
+	plugin:Activate(true)
+
+	local okHistory = pcall(function()
+		StudioService:RecordUndo(&quot;VibeCoder Build&quot;, function()
+			for _, s in ipairs(bundle.scripts) do
+				local okInstall, msg = installScript(s)
+				if okInstall then
+					created += 1
+				else
+					table.insert(failures, tostring(msg))
+				end
+			end
+		end)
+	end)
+
+	if not okHistory then
+		-- Fallback without undo wrapper (older Studio)
+		for _, s in ipairs(bundle.scripts) do
+			local okInstall, msg = installScript(s)
+			if okInstall then
+				created += 1
+			else
+				table.insert(failures, tostring(msg))
+			end
+		end
+	end
+
+	if #failures &gt; 0 then
+		status.Text = string.format(&quot;Created %d script(s). Some failed: %s&quot;, created, table.concat(failures, &quot;; &quot;))
+	else
+		status.Text = string.format(&quot;Created %d script(s). Done!&quot;, created)
+	end
+end)
+
+clearBtn.MouseButton1Click:Connect(function()
+	box.Text = &quot;&quot;
+	status.Text = &quot;Cleared.&quot;
+end)
+
+button.Click:Connect(function()
+	widget.Enabled = not widget.Enabled
+end)
+</string>
+    </Properties>
+  </Item>
+</roblox>
+

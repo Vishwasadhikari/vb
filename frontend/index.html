@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>VibeCoder – Describe → Roblox Lua</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: linear-gradient(160deg, #0b1020 0%, #0a1430 55%, #060814 100%);
+        color: #e5e7eb;
+        font-size: 16px;
+        min-height: 100vh;
+      }
+      /* Page scrollbar */
+      body::-webkit-scrollbar {
+        width: 10px;
+      }
+      body::-webkit-scrollbar-track {
+        background: #020617;
+      }
+      body::-webkit-scrollbar-thumb {
+        background: rgba(30, 64, 175, 0.9);
+        border-radius: 999px;
+        border: 2px solid #020617;
+      }
+      body::-webkit-scrollbar-thumb:hover {
+        background: rgba(59, 130, 246, 1);
+      }
+      .app {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 1rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        position: relative;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 800;
+        font-size: 1.35rem;
+        letter-spacing: 0.03em;
+      }
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
+          radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.6), transparent 55%),
+          linear-gradient(135deg, #a855f7, #6366f1, #22d3ee);
+        box-shadow:
+          0 0 22px rgba(129, 140, 248, 0.75),
+          0 0 40px rgba(56, 189, 248, 0.45);
+        position: relative;
+        overflow: hidden;
+      }
+      .logo-icon::after {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border-radius: 10px;
+        border: 1px solid rgba(226, 232, 240, 0.18);
+        box-shadow: inset 0 0 10px rgba(15, 23, 42, 0.45);
+      }
+      .logo-text-main {
+        display: inline-block;
+        background: linear-gradient(135deg, #e5e7eb, #a5b4fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .logo-text-sub {
+        display: block;
+        font-size: 0.65rem;
+        font-weight: 500;
+        color: #6b7280;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .header-center {
+        flex: 1;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #94a3b8;
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .toggle-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(15, 23, 42, 0.6);
+        color: #94a3b8;
+      }
+      .toggle-pill.on { background: rgba(99, 102, 241, 0.35); color: #c7d2fe; border-color: rgba(99, 102, 241, 0.5); }
+      .btn-header {
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(30, 41, 59, 0.8);
+        color: #e5e7eb;
+        cursor: pointer;
+      }
+      .btn-header.primary { background: rgba(34, 211, 238, 0.2); border-color: rgba(34, 211, 238, 0.5); color: #22d3ee; }
+      .debug-banner {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #dc2626;
+        color: #fff;
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+        transform: rotate(12deg);
+        border-radius: 2px;
+      }
+
+      /* Two columns */
+      .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+        flex: 1;
+      }
+      @media (max-width: 900px) {
+        .columns { grid-template-columns: 1fr; }
+      }
+
+      /* Cards */
+      .card {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+        position: relative;
+      }
+      .card-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        color: #94a3b8;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .card-dismiss {
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0.2rem;
+      }
+
+      /* Code Generation card */
+      .gen-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+      .btn-cyan {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        border: none;
+        background: rgba(34, 211, 238, 0.25);
+        color: #22d3ee;
+        cursor: pointer;
+      }
+      .btn-cyan:hover { background: rgba(34, 211, 238, 0.4); }
+      .btn-grey {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        font-weight: 650;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(51, 65, 85, 0.5);
+        color: #94a3b8;
+        cursor: pointer;
+      }
+      .btn-grey:hover { background: rgba(71, 85, 105, 0.6); }
+      .card-status { font-size: 0.92rem; color: #94a3b8; margin-top: 0.6rem; min-height: 1.2em; }
+      .card-status.error { color: #f87171; }
+
+      /* Recent prompts */
+      .recent-list { display: flex; flex-direction: column; gap: 0.35rem; }
+      .recent-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: 0.5rem;
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-size: 0.92rem;
+      }
+      .recent-item:hover { background: rgba(99, 102, 241, 0.15); }
+      .recent-item span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #cbd5e1; }
+      .recent-item .remove { background: none; border: none; color: #64748b; cursor: pointer; padding: 0.2rem; }
+
+      /* Tips card */
+      .tips-list { font-size: 0.92rem; color: #94a3b8; padding-left: 1rem; margin: 0; }
+      .tips-list li { margin-bottom: 0.35rem; }
+
+      /* Templates */
+      .template-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+      }
+      @media (min-width: 700px) {
+        .template-grid { grid-template-columns: 1fr 1fr; }
+      }
+      .template-card {
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(30, 41, 59, 0.35);
+        border-radius: 0.9rem;
+        padding: 0.75rem 0.85rem;
+        cursor: pointer;
+        transition: transform 0.08s ease, border-color 0.12s ease, background 0.12s ease;
+      }
+      .template-card:hover {
+        border-color: rgba(99, 102, 241, 0.38);
+        background: rgba(99, 102, 241, 0.10);
+        transform: translateY(-1px);
+      }
+      .template-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.25rem;
+      }
+      .template-title {
+        font-weight: 800;
+        color: #e5e7eb;
+        font-size: 0.95rem;
+        letter-spacing: 0.01em;
+      }
+      .template-pill {
+        font-size: 0.75rem;
+        color: #c7d2fe;
+        background: rgba(99, 102, 241, 0.22);
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        padding: 0.2rem 0.5rem;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .template-desc {
+        color: #94a3b8;
+        font-size: 0.88rem;
+        line-height: 1.35;
+        margin: 0;
+      }
+
+      /* Error card (right column) */
+      .error-card { background: rgba(127, 29, 29, 0.25); border-color: rgba(248, 113, 113, 0.3); }
+      .error-card .card-title { color: #fca5a5; }
+      .error-card .message { font-size: 0.85rem; color: #fecaca; }
+      .btn-retry { margin-top: 0.5rem; padding: 0.35rem 0.75rem; border-radius: 0.4rem; border: 1px solid rgba(248, 113, 113, 0.5); background: rgba(185, 28, 28, 0.4); color: #fca5a5; cursor: pointer; font-size: 0.8rem; }
+
+      /* Generated Lua card */
+      .lua-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .lua-filename {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+      .lua-dots { display: flex; gap: 4px; }
+      .lua-dots span { width: 8px; height: 8px; border-radius: 50%; }
+      .lua-dots .o { background: #fb923c; }
+      .lua-dots .r { background: #f87171; }
+      .lua-dots .g { background: #4ade80; }
+      .lua-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .code-wrap {
+        background: #0f172a;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(30, 64, 175, 0.35);
+        min-height: 360px;
+        max-height: 520px;
+        overflow: auto;
+      }
+      .code-wrap::-webkit-scrollbar {
+        width: 10px;
+      }
+      .code-wrap::-webkit-scrollbar-track {
+        background: #020617;
+        border-radius: 0 8px 8px 0;
+      }
+      .code-wrap::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #4f46e5, #22d3ee);
+        border-radius: 999px;
+        border: 2px solid #020617;
+      }
+      .code-wrap::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #6366f1, #2dd4bf);
+      }
+      .desc-box {
+        margin: 0.5rem 0 0.75rem 0;
+        padding: 0.75rem 0.85rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        background: rgba(30, 41, 59, 0.35);
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        font-weight: 550;
+        white-space: pre-wrap;
+      }
+      .code-wrap pre { margin: 0; padding: 1rem; font-size: 0.9rem; background: transparent !important; }
+      .code-wrap code { font-family: ui-monospace, monospace; }
+      .loading-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 2rem;
+        color: #64748b;
+      }
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 2px solid rgba(148, 163, 184, 0.2);
+        border-top-color: #22d3ee;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Form in first card */
+      .form-group { margin-bottom: 0.75rem; }
+      .form-group label { display: block; font-size: 0.92rem; font-weight: 700; color: #94a3b8; margin-bottom: 0.35rem; }
+      .form-group textarea, .form-group input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(15, 23, 42, 0.8);
+        color: #e5e7eb;
+        font-size: 0.95rem;
+        outline: none;
+      }
+      .form-group textarea { min-height: 100px; resize: vertical; }
+      .form-group textarea:focus, .form-group input:focus {
+        border-color: rgba(129, 140, 248, 0.9);
+        box-shadow:
+          0 0 0 1px rgba(15, 23, 42, 1),
+          0 0 0 2px rgba(129, 140, 248, 0.65);
+        background: rgba(15, 23, 42, 0.95);
+      }
+      /* Custom textarea scrollbar (WebKit) */
+      .form-group textarea::-webkit-scrollbar {
+        width: 10px;
+      }
+      .form-group textarea::-webkit-scrollbar-track {
+        background: #020617;
+        border-radius: 0 8px 8px 0;
+      }
+      .form-group textarea::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #4f46e5, #22d3ee);
+        border-radius: 999px;
+        border: 2px solid #020617;
+      }
+      .form-group textarea::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #6366f1, #2dd4bf);
+      }
+      .form-group input[type="file"] {
+        padding: 0.45rem 0.75rem;
+        color: #94a3b8;
+      }
+
+      /* Nice file picker */
+      .file-picker {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.55rem 0.65rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(15, 23, 42, 0.55);
+      }
+      .file-picker:hover { border-color: rgba(99, 102, 241, 0.45); }
+      .file-picker:focus-within { outline: 2px solid rgba(34, 211, 238, 0.35); outline-offset: 2px; }
+      .file-input-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+      .file-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.8rem;
+        border-radius: 0.65rem;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(51, 65, 85, 0.55);
+        color: #e5e7eb;
+        cursor: pointer;
+        font-size: 0.85rem;
+        user-select: none;
+      }
+      .file-btn:hover { background: rgba(71, 85, 105, 0.65); }
+      .file-name {
+        flex: 1;
+        min-width: 0;
+        font-size: 0.82rem;
+        color: #94a3b8;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-clear {
+        border: none;
+        background: rgba(30, 41, 59, 0.65);
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1;
+      }
+      .file-clear:hover { background: rgba(99, 102, 241, 0.15); color: #c7d2fe; }
+
+      .form-help {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 1.5rem 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="logo">
+          <span class="logo-icon"></span>
+          <div>
+            <span class="logo-text-main">VibeCoder</span>
+            <span class="logo-text-sub">Roblox AI Builder</span>
+          </div>
+        </div>
+        <div class="header-center">Describe → Roblox Lua (MVP)</div>
+      </header>
+
+      <div class="columns">
+        <div class="left-col">
+          <div class="card" id="card-generation">
+            <div class="card-title">Code Generation <button class="card-dismiss" aria-label="Close">×</button></div>
+            <form id="prompt-form">
+              <div class="form-group">
+                <label>Describe your game or change</label>
+                <textarea id="prompt" placeholder="e.g. Create a door that opens when the player touches it" required></textarea>
+              </div>
+              <div class="form-group">
+                <label>Add a picture (optional)</label>
+                <div class="file-picker">
+                  <input type="file" id="image" class="file-input-hidden" accept="image/*" multiple />
+                  <label class="file-btn" for="image">Choose images</label>
+                  <div class="file-name" id="file-name">No file selected</div>
+                  <button type="button" class="file-clear" id="file-clear" style="display:none;" aria-label="Clear images">×</button>
+                </div>
+                <div class="form-help">Tip: you can attach up to 2 images (each under ~4MB).</div>
+              </div>
+              <div class="card-title" style="margin: 0.25rem 0 0.5rem 0;">Code description</div>
+              <div class="desc-box" id="desc-box" style="display: none;"></div>
+              <div class="gen-buttons" style="margin-top: 0.75rem;">
+                <button type="submit" id="submit-btn" class="btn-cyan">Generate Code</button>
+              </div>
+              <div class="card-status" id="card-status"></div>
+            </form>
+          </div>
+
+          <div class="card" id="templates-card">
+            <div class="card-title">Templates <span style="font-size:0.85rem; font-weight:650; color:#64748b;">Click to load</span></div>
+            <div class="template-grid" id="template-grid"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Recent prompts <button class="btn-grey" id="clear-history-btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Clear</button></div>
+            <ul class="recent-list" id="recent-list"></ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Tips</div>
+            <ul class="tips-list">
+              <li>Be specific: "create door that opens on touch"</li>
+              <li>Mention events: touch, click, proximity</li>
+              <li>Ask for UI: "create simple leaderboard"</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="card error-card" id="error-card" style="display: none;">
+            <div class="card-title">Error <button class="card-dismiss" id="error-dismiss">×</button></div>
+            <div class="message" id="error-message"></div>
+            <button type="button" class="btn-retry" id="retry-btn">Retry</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Generated Lua</div>
+            <div class="lua-header">
+              <div class="lua-filename">
+                <span class="lua-dots"><span class="o"></span><span class="r"></span><span class="g"></span></span>
+                game.lua
+              </div>
+              <div class="lua-toolbar">
+                <span class="toggle-pill on" id="hl-pill">HL</span>
+                <button type="button" class="btn-header" id="copy-lua-btn">Copy</button>
+                <button type="button" class="btn-header primary" id="download-lua-btn">Download .lua</button>
+              </div>
+            </div>
+            <div class="code-wrap" id="code-wrap">
+              <pre><code id="output" class="language-lua">-- Describe your idea and click "Generate Code".
+-- Paste the result into Roblox Studio.</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">Built for the Vibe Coding challenge – demo-ready MVP</footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-lua.min.js"></script>
+    <script>
+      const form = document.getElementById("prompt-form");
+      const promptInput = document.getElementById("prompt");
+      const imageInput = document.getElementById("image");
+      const fileNameEl = document.getElementById("file-name");
+      const fileClearBtn = document.getElementById("file-clear");
+      const codeWrap = document.getElementById("code-wrap");
+      const descBox = document.getElementById("desc-box");
+      const cardStatus = document.getElementById("card-status");
+      const submitBtn = document.getElementById("submit-btn");
+      const errorCard = document.getElementById("error-card");
+      const errorMessage = document.getElementById("error-message");
+      const recentList = document.getElementById("recent-list");
+      const templateGrid = document.getElementById("template-grid");
+
+      const API_BASE = "http://localhost:8000";
+      const HISTORY_KEY = "vibe-coding-history";
+      const MAX_HISTORY = 10;
+
+      const TEMPLATES = [
+        {
+          title: "Full Game: Coin Collector",
+          pill: "full game",
+          desc: "Collect coins, score Points, timer, win screen.",
+          prompt: [
+            "Build a small complete Roblox coin-collector game (MVP) using Roblox Lua.",
+            "",
+            "Requirements (implement all of these, but nothing extra):",
+            "- Use leaderstats named Points (default 0).",
+            "- Spawn 15 coins around the map (Workspace) at random positions within a reasonable radius of SpawnLocation.",
+            "- When a player touches a coin, the coin disappears and the player gets +1 Point.",
+            "- Respawn that coin after 5 seconds at a new random position.",
+            "- Add a 60-second round timer. When time ends, show a simple ScreenGui to each player: \"Time's up! You collected X coins.\"",
+            "- Reset Points to 0 when a new round starts.",
+            "",
+            "Structure: if you need multiple scripts, output them in one lua_code with clear section headers like: -- Script: ServerScriptService/GameManager, -- Script: ServerScriptService/CoinSpawner, -- Script: StarterGui/ResultGui.",
+            "Keep code minimal but complete and working.",
+          ].join("\\n"),
+        },
+        {
+          title: "Full Game: Escape from Zombies",
+          pill: "full game",
+          desc: "Zombies chase players; survive to win.",
+          prompt: [
+            "Build a small complete Roblox 'escape from zombies' game (MVP) using Roblox Lua.",
+            "",
+            "Requirements (implement all of these, but nothing extra):",
+            "- There is a Folder in Workspace named Zombies that contains 5 NPC zombie models (Rig with Humanoid + HumanoidRootPart).",
+            "- Each zombie should continuously chase the nearest player using PathfindingService.",
+            "- If a zombie touches a player, that player's Humanoid takes 15 damage (with a short cooldown so it doesn't spam damage every frame).",
+            "- Add a 90-second survival timer. If the player survives until the timer ends, show a simple ScreenGui: \"You survived!\" If they die, show: \"You were caught!\"",
+            "- Optional but allowed: award +1 Point every 10 seconds survived (leaderstats named Points).",
+            "",
+            "Structure: if you need multiple scripts, output them in one lua_code with clear section headers like: -- Script: ServerScriptService/ZombieAI, -- Script: ServerScriptService/SurvivalTimer, -- Script: StarterGui/EndScreenGui.",
+            "Keep code minimal but complete and working.",
+          ].join("\\n"),
+        },
+      ];
+
+      function showError(msg) {
+        errorMessage.textContent = msg;
+        errorCard.style.display = "block";
+      }
+      function hideError() {
+        errorCard.style.display = "none";
+      }
+      document.getElementById("error-dismiss").addEventListener("click", hideError);
+      document.getElementById("retry-btn").addEventListener("click", () => { form.requestSubmit(); hideError(); });
+
+      function getHistory() {
+        try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); } catch { return []; }
+      }
+      function saveHistory(entry) {
+        let list = getHistory();
+        list.unshift({ ...entry, ts: Date.now() });
+        list = list.slice(0, MAX_HISTORY);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+        renderHistory();
+      }
+      function removeHistoryIndex(i) {
+        let list = getHistory();
+        list.splice(i, 1);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+        renderHistory();
+      }
+      function renderHistory() {
+        const list = getHistory();
+        recentList.innerHTML = list.map((e, i) => {
+          const snip = (e.prompt || "").slice(0, 42) + ((e.prompt || "").length > 42 ? "…" : "");
+          return `<li class="recent-item" data-index="${i}"><span title="${(e.prompt || "").replace(/"/g, "&quot;")}">${snip}</span><button class="remove" data-index="${i}" aria-label="Remove">×</button></li>`;
+        }).join("");
+        recentList.querySelectorAll(".recent-item").forEach((li) => {
+          const idx = Number(li.dataset.index);
+          li.querySelector("span").addEventListener("click", () => {
+            const entry = getHistory()[idx];
+            if (entry) {
+              promptInput.value = entry.prompt || "";
+              if (entry.lua_code) {
+                codeWrap.innerHTML = '<pre><code id="output" class="language-lua"></code></pre>';
+                const out = document.getElementById("output");
+                out.textContent = entry.lua_code;
+                if (window.Prism) Prism.highlightElement(out);
+              }
+              if (descBox) {
+                const text = (entry.description || "").trim();
+                descBox.textContent = text;
+                descBox.style.display = text ? "block" : "none";
+              }
+              cardStatus.textContent = "Loaded from history.";
+            }
+          });
+          li.querySelector(".remove").addEventListener("click", (e) => { e.stopPropagation(); removeHistoryIndex(idx); });
+        });
+      }
+      renderHistory();
+
+      document.getElementById("clear-history-btn").addEventListener("click", () => {
+        localStorage.setItem(HISTORY_KEY, "[]");
+        renderHistory();
+      });
+
+      function setLoading(loading) {
+        submitBtn.disabled = loading;
+        submitBtn.textContent = loading ? "Generating..." : "Generate Code";
+        if (loading) {
+          codeWrap.innerHTML = '<div class="loading-placeholder"><div class="spinner"></div><span>Generating…</span></div>';
+        }
+      }
+
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(String(r.result || ""));
+          r.onerror = () => reject(new Error("Could not read image"));
+          r.readAsDataURL(file);
+        });
+      }
+
+      function updateFileUI() {
+        const files = Array.from(imageInput?.files || []);
+        if (!fileNameEl) return;
+        if (files.length === 0) {
+          fileNameEl.textContent = "No file selected";
+        } else if (files.length === 1) {
+          const name = files[0].name;
+          fileNameEl.textContent = name.length > 40 ? name.slice(0, 37) + "…" : name;
+        } else {
+          const first = files[0].name;
+          const firstShort = first.length > 24 ? first.slice(0, 21) + "…" : first;
+          const extraCount = files.length - 1;
+          fileNameEl.textContent = `${files.length} images • ${firstShort} + ${extraCount} more`;
+        }
+        if (fileClearBtn) fileClearBtn.style.display = files.length ? "inline-flex" : "none";
+      }
+      if (imageInput) imageInput.addEventListener("change", updateFileUI);
+      if (fileClearBtn) fileClearBtn.addEventListener("click", () => {
+        if (!imageInput) return;
+        imageInput.value = "";
+        updateFileUI();
+      });
+      updateFileUI();
+
+      function renderTemplates() {
+        if (!templateGrid) return;
+        const escape = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        templateGrid.innerHTML = TEMPLATES.map((t, i) => {
+          return `
+            <div class="template-card" data-template-index="${i}" role="button" tabindex="0">
+              <div class="template-top">
+                <div class="template-title">${escape(t.title)}</div>
+                <div class="template-pill">${escape(t.pill)}</div>
+              </div>
+              <p class="template-desc">${escape(t.desc)}</p>
+            </div>
+          `;
+        }).join("");
+
+        const activate = (i) => {
+          const t = TEMPLATES[i];
+          if (!t) return;
+          promptInput.value = t.prompt;
+          promptInput.focus();
+          if (imageInput) imageInput.value = "";
+          updateFileUI();
+          if (descBox) descBox.style.display = "none";
+          cardStatus.textContent = `Template loaded: ${t.title}`;
+          hideError();
+        };
+
+        templateGrid.querySelectorAll("[data-template-index]").forEach((el) => {
+          const idx = Number(el.getAttribute("data-template-index"));
+          el.addEventListener("click", () => activate(idx));
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              activate(idx);
+            }
+          });
+        });
+      }
+      renderTemplates();
+
+      function setOutput(lua, description) {
+        if (descBox) {
+          const text = (description || "").trim();
+          descBox.textContent = text;
+          descBox.style.display = text ? "block" : "none";
+        }
+        cardStatus.textContent = "Ready. Copy or download.";
+        cardStatus.classList.remove("error");
+        codeWrap.innerHTML = '<pre><code id="output" class="language-lua"></code></pre>';
+        const out = document.getElementById("output");
+        out.textContent = lua;
+        if (window.Prism) Prism.highlightElement(out);
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const prompt = promptInput.value.trim();
+        if (!prompt) return;
+
+        setLoading(true);
+        hideError();
+        cardStatus.textContent = "Calling API...";
+
+        try {
+          let imageDataList = null;
+          const files = Array.from(imageInput?.files || []);
+          if (files.length > 2) throw new Error("Please select at most 2 images.");
+          if (files.length) {
+            for (const f of files) {
+              if (f.size > 4 * 1024 * 1024) throw new Error(`Image is too large: ${f.name}. Please use images under 4MB.`);
+            }
+            imageDataList = await Promise.all(files.map(readFileAsDataURL));
+          }
+
+          const res = await fetch(API_BASE + "/generate-script", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt, style: null, max_tokens: 1500, image_data_list: imageDataList }),
+          });
+
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || "Failed to generate script");
+          }
+
+          const data = await res.json();
+          const lua = data?.script?.lua_code || "-- No Lua code returned.";
+          const description = data?.script?.description || "";
+
+          setOutput(lua, description || "");
+          saveHistory({ prompt, style: null, description, lua_code: lua, setup_steps: data?.script?.setup_steps || null });
+        } catch (err) {
+          cardStatus.textContent = "Update failed";
+          cardStatus.classList.add("error");
+          codeWrap.innerHTML = '<pre><code id="output" class="language-lua">-- Error: could not generate script.</code></pre>';
+          if (descBox) descBox.style.display = "none";
+          showError(err.message || "Something went wrong.");
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      function copyCode() {
+        const text = (document.getElementById("output")?.textContent || "").trim();
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+          cardStatus.textContent = "Copied!";
+          setTimeout(() => { cardStatus.textContent = ""; }, 2000);
+        }).catch(() => { cardStatus.textContent = "Copy failed"; });
+      }
+
+      document.getElementById("copy-lua-btn").addEventListener("click", copyCode);
+
+      function parseLuaScriptSections(luaText) {
+        const text = String(luaText || "").replace(/\r\n/g, "\n");
+        const lines = text.split("\n");
+        const headerRe = /^\s*--\s*Script:\s*(.+?)\s*$/i;
+        const out = [];
+        let current = null;
+
+        for (const line of lines) {
+          const m = line.match(headerRe);
+          if (m) {
+            if (current) out.push(current);
+            current = { path: m[1].trim(), codeLines: [] };
+            continue;
+          }
+          if (!current) current = { path: "ServerScriptService/VibeCoderScript", codeLines: [] };
+          current.codeLines.push(line);
+        }
+        if (current) out.push(current);
+
+        return out
+          .map((s) => ({ path: s.path, code: s.codeLines.join("\n").trim() }))
+          .filter((s) => s.code);
+      }
+
+      function inferScriptClassFromPath(path) {
+        const p = String(path || "");
+        if (/^(StarterGui|StarterPlayerScripts|StarterCharacterScripts)\b/i.test(p)) return "LocalScript";
+        return "Script";
+      }
+
+      function doDownload() {
+        const text = (document.getElementById("output")?.textContent || "").trim();
+        if (!text) return;
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+        a.download = "game.lua";
+        a.click();
+        URL.revokeObjectURL(a.href);
+        cardStatus.textContent = "Downloaded game.lua";
+        setTimeout(() => { cardStatus.textContent = ""; }, 2000);
+      }
+      document.getElementById("download-lua-btn").addEventListener("click", doDownload);
+    </script>
+  </body>
+</html>

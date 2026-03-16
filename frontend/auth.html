@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>VibeCoder – Sign in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: linear-gradient(160deg, #0b1020 0%, #0a1430 55%, #060814 100%);
+        color: #e5e7eb;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .shell {
+        width: 100%;
+        max-width: 440px;
+        padding: 1.5rem;
+      }
+      .card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        border-radius: 1rem;
+        padding: 1.5rem 1.75rem;
+      }
+      .logo-row {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 0.75rem;
+      }
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
+          radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.6), transparent 55%),
+          linear-gradient(135deg, #a855f7, #6366f1, #22d3ee);
+        box-shadow:
+          0 0 22px rgba(129, 140, 248, 0.75),
+          0 0 40px rgba(56, 189, 248, 0.45);
+        position: relative;
+        overflow: hidden;
+      }
+      .logo-icon::after {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border-radius: 10px;
+        border: 1px solid rgba(226, 232, 240, 0.18);
+        box-shadow: inset 0 0 10px rgba(15, 23, 42, 0.45);
+      }
+      .logo-text-main {
+        display: inline-block;
+        background: linear-gradient(135deg, #e5e7eb, #a5b4fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 800;
+      }
+      .logo-text-sub {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: #64748b;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0.4rem 0 0.2rem 0;
+        font-size: 1.25rem;
+      }
+      p.sub {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #94a3b8;
+      }
+      .form-group { margin-top: 0.9rem; }
+      .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #94a3b8;
+        margin-bottom: 0.3rem;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 0.55rem 0.8rem;
+        border-radius: 0.6rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(15, 23, 42, 0.95);
+        color: #e5e7eb;
+        font-size: 0.95rem;
+        outline: none;
+      }
+      .form-group input:focus {
+        border-color: rgba(129, 140, 248, 0.9);
+        box-shadow:
+          0 0 0 1px rgba(15, 23, 42, 1),
+          0 0 0 2px rgba(129, 140, 248, 0.65);
+      }
+      .form-help {
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+      .actions {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+      .btn-cyan,
+      .btn-grey {
+        padding: 0.55rem 1rem;
+        border-radius: 0.65rem;
+        font-size: 0.9rem;
+        font-weight: 650;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-cyan {
+        background: rgba(34, 211, 238, 0.3);
+        color: #22d3ee;
+      }
+      .btn-cyan:hover { background: rgba(34, 211, 238, 0.45); }
+      .btn-grey {
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: rgba(30, 41, 59, 0.9);
+        color: #e5e7eb;
+      }
+      .btn-grey:hover { background: rgba(51, 65, 85, 0.9); }
+      .status {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        color: #94a3b8;
+        min-height: 1.2em;
+      }
+      .status.ok { color: #86efac; }
+      .status.bad { color: #fca5a5; }
+      .tiny {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        color: #64748b;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="card">
+        <div class="logo-row">
+          <span class="logo-icon"></span>
+          <div>
+            <span class="logo-text-main">VibeCoder</span>
+            <span class="logo-text-sub">Roblox AI Builder</span>
+          </div>
+        </div>
+        <h1>Sign in to continue</h1>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+          <div class="form-help">At least 6 characters. Stored hashed (bcrypt), never in plain text.</div>
+        </div>
+        <div class="actions">
+          <button class="btn-cyan" id="signup-btn">Sign up</button>
+          <button class="btn-grey" id="login-btn">Log in</button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE =
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://localhost:8000"
+          : "https://vb-fgl8.onrender.com";
+      const AUTH_KEY = "vibecoder-auth-token";
+
+      function getToken() {
+        try { return localStorage.getItem(AUTH_KEY) || ""; } catch { return ""; }
+      }
+      function setToken(t) {
+        try { localStorage.setItem(AUTH_KEY, t); } catch {}
+      }
+      function setStatus(msg, kind) {
+        const el = document.getElementById("status");
+        if (!el) return;
+        el.textContent = msg || "";
+        el.classList.remove("ok", "bad");
+        if (kind) el.classList.add(kind);
+      }
+      function goToConsole() {
+        window.location.href = "index.html";
+      }
+
+      // If already logged in, go straight to console
+      (async function bootstrap() {
+        const token = getToken();
+        if (!token) return;
+        try {
+          const res = await fetch(API_BASE + "/auth/me", { headers: { Authorization: "Bearer " + token } });
+          if (res.ok) {
+            goToConsole();
+          }
+        } catch {
+          // ignore
+        }
+      })();
+
+      async function authRequest(path, email, password) {
+        const res = await fetch(API_BASE + path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.detail || "Auth failed");
+        const token = json.access_token || "";
+        if (!token) throw new Error("No token returned");
+        setToken(token);
+        goToConsole();
+      }
+
+      document.getElementById("signup-btn").addEventListener("click", async () => {
+        const email = (document.getElementById("email").value || "").trim();
+        const password = (document.getElementById("password").value || "").trim();
+        setStatus("Signing up...", "");
+        try {
+          await authRequest("/auth/signup", email, password);
+        } catch (e) {
+          setStatus(e.message || "Sign up failed.", "bad");
+        }
+      });
+
+      document.getElementById("login-btn").addEventListener("click", async () => {
+        const email = (document.getElementById("email").value || "").trim();
+        const password = (document.getElementById("password").value || "").trim();
+        setStatus("Logging in...", "");
+        try {
+          await authRequest("/auth/login", email, password);
+        } catch (e) {
+          setStatus(e.message || "Login failed.", "bad");
+        }
+      });
+    </script>
+  </body>
+</html>
+

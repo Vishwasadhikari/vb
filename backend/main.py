@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
 from .ai import generate_roblox_script
+from .auth import router as auth_router
+from .db import close_mongo, init_mongo, mongo_client
+from .projects import router as projects_router
 from .schemas import GenerateScriptRequest, GenerateScriptResponse
 
 
@@ -25,24 +27,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
+app.include_router(projects_router)
+
 
 MONGODB_URI = os.getenv("DATABASE_URL")
-mongo_client: AsyncIOMotorClient | None = None
 
 
 @app.on_event("startup")
 async def startup_db() -> None:
-    global mongo_client
     if MONGODB_URI:
-        mongo_client = AsyncIOMotorClient(MONGODB_URI)
+        init_mongo(MONGODB_URI)
 
 
 @app.on_event("shutdown")
 async def shutdown_db() -> None:
-    global mongo_client
-    if mongo_client:
-        mongo_client.close()
-        mongo_client = None
+    close_mongo()
 
 
 @app.get("/health")

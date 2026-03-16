@@ -34,3 +34,40 @@ class GeneratedScript(BaseModel):
 
 class GenerateScriptResponse(BaseModel):
     script: GeneratedScript
+
+
+class AuthSignupRequest(BaseModel):
+    email: str = Field(..., description="User email address")
+    password: str = Field(..., min_length=6, description="User password (min 6 chars)")
+
+
+class AuthLoginRequest(BaseModel):
+    email: str = Field(..., description="User email address")
+    password: str = Field(..., description="User password")
+
+
+class AuthTokenResponse(BaseModel):
+    access_token: str = Field(..., description="JWT access token")
+    token_type: str = Field(default="bearer")
+
+
+class MeResponse(BaseModel):
+    email: str
+
+
+class ProfileResponse(BaseModel):
+    email: str
+    name: str | None = None
+    handle: str | None = None
+    bio: str | None = None
+
+
+class ProfileUpdateRequest(BaseModel):
+    name: str | None = None
+    handle: str | None = None
+    bio: str | None = None
+
+
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str

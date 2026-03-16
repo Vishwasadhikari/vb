@@ -30,6 +30,167 @@
       body::-webkit-scrollbar-thumb:hover {
         background: rgba(59, 130, 246, 1);
       }
+      .layout {
+        display: flex;
+        min-height: 100vh;
+        transition: margin-left 0.18s ease;
+      }
+      .sidebar {
+        width: 220px;
+        padding: 0.9rem 0.8rem;
+        border-right: 1px solid rgba(15, 23, 42, 0.95);
+        background: radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.16), transparent 55%), rgba(12, 16, 32, 0.98);
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .sidebar-collapsed .sidebar {
+        width: 0;
+        padding: 0;
+        border-right: none;
+        overflow: hidden;
+      }
+      .sidebar-collapsed .sidebar-header,
+      .sidebar-collapsed .sidebar-nav,
+      .sidebar-collapsed .sidebar-footer {
+        display: none;
+      }
+      .sidebar-collapsed .app {
+        max-width: 1320px;
+      }
+      .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+      }
+      .sidebar-title-main {
+        display: inline-block;
+        background: linear-gradient(135deg, #e5e7eb, #a5b4fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-size: 1rem;
+        font-weight: 800;
+      }
+      .sidebar-title-sub {
+        display: block;
+        font-size: 0.65rem;
+        font-weight: 500;
+        color: #6b7280;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .sidebar-nav {
+        margin-top: 0.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        flex: 1;
+      }
+      .sidebar-section-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #6b7280;
+        margin: 0.6rem 0 0.2rem 0.2rem;
+      }
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.4rem;
+        padding: 0.45rem 0.6rem;
+        border-radius: 0.55rem;
+        font-size: 0.85rem;
+        color: #e5e7eb;
+        cursor: pointer;
+      }
+      .sidebar-item:hover {
+        background: rgba(30, 64, 175, 0.3);
+      }
+      #sb-profile {
+        margin-top: 0.4rem;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+        justify-content: flex-start;
+        gap: 0.5rem;
+        width: 100%;
+      }
+      #sb-profile::before {
+        content: "👤";
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+      #sb-profile:hover {
+        border-color: rgba(129, 140, 248, 0.9);
+        background: rgba(15, 23, 42, 1);
+      }
+      .sidebar-projects-list {
+        max-height: 180px;
+        overflow: auto;
+        padding-left: 0.2rem;
+      }
+      .sidebar-project-pill {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96));
+        margin-top: 0.3rem;
+        cursor: pointer;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sidebar-project-pill.active {
+        border-color: rgba(56, 189, 248, 0.8);
+        color: #a5f3fc;
+      }
+      .sidebar-footer {
+        margin-top: 0.8rem;
+        padding-top: 0.6rem;
+        border-top: 1px solid rgba(30, 41, 59, 0.9);
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .sidebar-projects-list::-webkit-scrollbar {
+        width: 8px;
+      }
+      .sidebar-projects-list::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 1);
+        border-radius: 999px;
+      }
+      .sidebar-projects-list::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #4f46e5, #22d3ee);
+        border-radius: 999px;
+        border: 2px solid rgba(15, 23, 42, 1);
+      }
+      .sidebar-projects-list::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #6366f1, #2dd4bf);
+      }
+      .sidebar-logout-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.2), transparent 55%), rgba(15, 23, 42, 0.98);
+        color: #e5e7eb;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .sidebar-logout-btn:hover {
+        border-color: rgba(248, 113, 113, 0.8);
+        background: rgba(30, 41, 59, 1);
+      }
       .app {
         max-width: 1320px;
         margin: 0 auto;
@@ -37,6 +198,7 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        flex: 1;
       }
 
       /* Header */
@@ -48,6 +210,11 @@
         gap: 1rem;
         padding: 0.75rem 0;
         position: relative;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
       }
       .logo {
         display: flex;
@@ -97,14 +264,31 @@
       .header-center {
         flex: 1;
         text-align: center;
-        font-size: 1rem;
-        font-weight: 600;
-        color: #94a3b8;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #9ca3af;
       }
       .header-actions {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+      }
+      .sidebar-toggle-btn {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.9);
+        color: #94a3b8;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+      .sidebar-toggle-btn:hover {
+        border-color: rgba(129, 140, 248, 0.9);
+        color: #c7d2fe;
       }
       .toggle-pill {
         display: inline-flex;
@@ -119,13 +303,18 @@
       }
       .toggle-pill.on { background: rgba(99, 102, 241, 0.35); color: #c7d2fe; border-color: rgba(99, 102, 241, 0.5); }
       .btn-header {
-        padding: 0.4rem 0.75rem;
-        border-radius: 0.5rem;
+        padding: 0.45rem 0.95rem;
+        border-radius: 999px;
         font-size: 0.8rem;
-        border: 1px solid rgba(148, 163, 184, 0.3);
-        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.25), transparent 55%), rgba(15, 23, 42, 0.95);
         color: #e5e7eb;
         cursor: pointer;
+        transition: background 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
+      }
+      .btn-header:hover { border-color: rgba(129, 140, 248, 0.9); background: rgba(15, 23, 42, 1); transform: translateY(-1px); }
+      #new-project-btn {
+        margin-left: 0.5rem;
       }
       .btn-header.primary { background: rgba(34, 211, 238, 0.2); border-color: rgba(34, 211, 238, 0.5); color: #22d3ee; }
       .debug-banner {
@@ -225,6 +414,72 @@
       /* Tips card */
       .tips-list { font-size: 0.92rem; color: #94a3b8; padding-left: 1rem; margin: 0; }
       .tips-list li { margin-bottom: 0.35rem; }
+
+      /* Recipes card */
+      .recipes-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem; }
+      .recipe-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.45rem 0.6rem;
+        border-radius: 0.6rem;
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .recipe-item-main { display: flex; flex-direction: column; gap: 0.05rem; }
+      .recipe-title { font-weight: 600; color: #e5e7eb; }
+      .recipe-sub { font-size: 0.8rem; color: #9ca3af; }
+      .recipe-chip {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        background: rgba(34, 211, 238, 0.12);
+        border: 1px solid rgba(34, 211, 238, 0.45);
+        color: #a5f3fc;
+        white-space: nowrap;
+      }
+      .recipes-form {
+        margin-top: 0.6rem;
+        padding: 0.6rem 0.7rem;
+        border-radius: 0.6rem;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px dashed rgba(148, 163, 184, 0.35);
+        font-size: 0.85rem;
+        color: #94a3b8;
+      }
+      .recipes-form-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.45rem; }
+      .recipes-form label { font-weight: 600; }
+      .recipes-form select,
+      .recipes-form input {
+        padding: 0.35rem 0.6rem;
+        border-radius: 0.4rem;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: rgba(15, 23, 42, 0.95);
+        color: #e5e7eb;
+        font-size: 0.85rem;
+      }
+      .recipes-actions { display: flex; gap: 0.5rem; margin-top: 0.35rem; }
+      .recipes-note { margin-top: 0.35rem; font-size: 0.8rem; color: #64748b; }
+
+      /* Auth card */
+      .auth-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; }
+      .auth-status {
+        margin-top: 0.6rem;
+        font-size: 0.9rem;
+        color: #94a3b8;
+        min-height: 1.2em;
+      }
+      .auth-status.ok { color: #86efac; }
+      .auth-status.bad { color: #fca5a5; }
+      .small-link {
+        font-size: 0.85rem;
+        color: #93c5fd;
+        text-decoration: underline;
+        cursor: pointer;
+      }
 
       /* Templates */
       .template-grid {
@@ -469,20 +724,158 @@
         font-weight: 600;
         color: #64748b;
       }
+      .project-select {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.15rem;
+        font-size: 0.85rem;
+        color: #9ca3af;
+      }
+      .project-select select {
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 0.45rem;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        color: #e5e7eb;
+        padding: 0.25rem 0.6rem;
+        font-size: 0.85rem;
+      }
+      .project-form {
+        position: absolute;
+        top: 3.1rem;
+        right: 1rem;
+        width: 260px;
+        background: rgba(15, 23, 42, 0.98);
+        border-radius: 0.9rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        padding: 0.75rem 0.9rem;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+        z-index: 20;
+        font-size: 0.85rem;
+      }
+      .project-form h3 {
+        margin: 0 0 0.4rem 0;
+        font-size: 0.9rem;
+        color: #e5e7eb;
+      }
+      .project-form .pf-row { margin-bottom: 0.45rem; }
+      .project-form label { display: block; margin-bottom: 0.2rem; color: #9ca3af; font-weight: 600; }
+      .project-form input,
+      .project-form textarea {
+        width: 100%;
+        border-radius: 0.45rem;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(15, 23, 42, 0.98);
+        color: #e5e7eb;
+        padding: 0.35rem 0.55rem;
+        font-size: 0.85rem;
+      }
+      .project-form textarea { resize: vertical; min-height: 48px; }
+      .project-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.4rem;
+        margin-top: 0.4rem;
+      }
     </style>
   </head>
   <body>
-    <div class="app">
+    <div class="layout" id="layout-root">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <span class="logo-icon"></span>
+          <div>
+            <span class="sidebar-title-main">VibeCoder</span>
+            <span class="sidebar-title-sub">Roblox AI Builder</span>
+          </div>
+        </div>
+        <div class="sidebar-nav">
+          <div class="sidebar-section-label">Console</div>
+          <div class="sidebar-item" id="sb-console">Main builder</div>
+          <div class="sidebar-item" id="sb-recipes">Guided recipes</div>
+          <div class="sidebar-section-label">Projects</div>
+          <div class="sidebar-item" id="sb-projects">
+            <span>All projects</span>
+            <span style="font-size:0.8rem; color:#9ca3af;">open dropdown</span>
+          </div>
+          <div class="sidebar-projects-list" id="sb-projects-list"></div>
+          <div class="sidebar-section-label">History</div>
+          <div class="sidebar-item" id="sb-history">Recent prompts</div>
+          <div class="sidebar-projects-list" id="sb-history-list"></div>
+        </div>
+        <div class="sidebar-footer">
+          <div class="sidebar-item" id="sb-profile">Profile</div>
+          <button type="button" class="sidebar-logout-btn" id="sidebar-logout-btn">
+            <span>Log out</span>
+          </button>
+        </div>
+      </aside>
+      <div class="app">
       <header class="header">
-        <div class="logo">
+        <div class="header-left">
+          <button type="button" class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="Toggle sidebar">≡</button>
+          <div class="logo">
           <span class="logo-icon"></span>
           <div>
             <span class="logo-text-main">VibeCoder</span>
             <span class="logo-text-sub">Roblox AI Builder</span>
           </div>
         </div>
-        <div class="header-center">Describe → Roblox Lua (MVP)</div>
+        </div>
+        <div class="header-center">
+          <span style="opacity:0.9;">Describe → Roblox Lua (MVP)</span>
+          <span class="project-select">
+            <span style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.12em;">Project</span>
+            <select id="project-select"></select>
+          </span>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-grey" id="new-project-btn" style="font-size:0.8rem; padding:0.4rem 0.9rem;">New</button>
+        </div>
       </header>
+      <div class="project-form" id="project-form" style="display:none;">
+        <h3>New project</h3>
+        <div class="pf-row">
+          <label for="pf-name">Project name</label>
+          <input id="pf-name" type="text" placeholder="e.g. Coin Collector MVP" />
+        </div>
+        <div class="pf-row">
+          <label for="pf-description">Description</label>
+          <textarea id="pf-description" placeholder="Short note about this project (optional)"></textarea>
+        </div>
+        <div class="project-form-actions">
+          <button type="button" class="btn-grey" id="pf-cancel">Cancel</button>
+          <button type="button" class="btn-cyan" id="pf-create">Create</button>
+        </div>
+      </div>
+      <div class="project-form" id="profile-panel" style="display:none; max-width:320px; right:auto; left:260px;">
+        <h3>Your profile</h3>
+        <div class="pf-row">
+          <label>Email</label>
+          <div id="pf-email" style="font-size:0.85rem; color:#cbd5e1;"></div>
+        </div>
+        <div class="pf-row">
+          <label for="pf-name-main">Name</label>
+          <input id="pf-name-main" type="text" />
+        </div>
+        <div class="pf-row">
+          <label for="pf-handle">User id</label>
+          <input id="pf-handle" type="text" placeholder="@vibecoder" />
+        </div>
+        <div class="pf-row">
+          <label for="pf-bio">About</label>
+          <textarea id="pf-bio" placeholder="Short description"></textarea>
+        </div>
+        <div class="pf-row">
+          <label>Change password</label>
+          <input id="pf-old-pass" type="password" placeholder="Current password" />
+          <input id="pf-new-pass" type="password" placeholder="New password" />
+        </div>
+        <div class="project-form-actions">
+          <button type="button" class="btn-grey" id="pf-close">Close</button>
+          <button type="button" class="btn-cyan" id="pf-save">Save</button>
+        </div>
+        <div class="form-help" id="pf-status"></div>
+      </div>
 
       <div class="columns">
         <div class="left-col">
@@ -517,9 +910,25 @@
             <div class="template-grid" id="template-grid"></div>
           </div>
 
-          <div class="card">
-            <div class="card-title">Recent prompts <button class="btn-grey" id="clear-history-btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Clear</button></div>
-            <ul class="recent-list" id="recent-list"></ul>
+          <div class="card" id="recipes-card">
+            <div class="card-title">Guided recipes <span style="font-size:0.8rem; font-weight:600; color:#64748b;">Quick wizards</span></div>
+            <div class="recipes-list" id="recipes-list">
+              <div class="recipe-item" data-recipe="powerup">
+                <div class="recipe-item-main">
+                  <div class="recipe-title">Touch power‑up</div>
+                  <div class="recipe-sub">When player touches a part, boost health / speed / jump.</div>
+                </div>
+                <span class="recipe-chip">character buff</span>
+              </div>
+              <div class="recipe-item" data-recipe="coin">
+                <div class="recipe-item-main">
+                  <div class="recipe-title">Coin pickup</div>
+                  <div class="recipe-sub">Give Points when player touches a coin part.</div>
+                </div>
+                <span class="recipe-chip">Points</span>
+              </div>
+            </div>
+            <div class="recipes-form" id="recipes-form" style="display:none;"></div>
           </div>
 
           <div class="card">
@@ -540,7 +949,10 @@
           </div>
 
           <div class="card">
-            <div class="card-title">Generated Lua</div>
+            <div class="card-title">
+              <span>Generated Lua</span>
+              <span id="safety-pill" class="toggle-pill on" style="cursor:default;">Safe</span>
+            </div>
             <div class="lua-header">
               <div class="lua-filename">
                 <span class="lua-dots"><span class="o"></span><span class="r"></span><span class="g"></span></span>
@@ -556,11 +968,13 @@
               <pre><code id="output" class="language-lua">-- Describe your idea and click "Generate Code".
 -- Paste the result into Roblox Studio.</code></pre>
             </div>
+            <div class="form-help" id="placement-summary" style="margin-top:0.5rem;"></div>
           </div>
         </div>
       </div>
 
       <footer class="footer">Built for the Vibe Coding challenge – demo-ready MVP</footer>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -579,10 +993,277 @@
       const errorMessage = document.getElementById("error-message");
       const recentList = document.getElementById("recent-list");
       const templateGrid = document.getElementById("template-grid");
-
-      const API_BASE = "https://vb-fgl8.onrender.com";
-      const HISTORY_KEY = "vibe-coding-history";
+      const recipesList = document.getElementById("recipes-list");
+      const recipesForm = document.getElementById("recipes-form");
+      const safetyPill = document.getElementById("safety-pill");
+      const placementSummary = document.getElementById("placement-summary");
+      const projectSelect = document.getElementById("project-select");
+      const newProjectBtn = document.getElementById("new-project-btn");
+      const projectForm = document.getElementById("project-form");
+      const pfName = document.getElementById("pf-name");
+      const pfDescription = document.getElementById("pf-description");
+      const pfCancel = document.getElementById("pf-cancel");
+      const pfCreate = document.getElementById("pf-create");
+      const sbConsole = document.getElementById("sb-console");
+      const sbRecipes = document.getElementById("sb-recipes");
+      const sbProjects = document.getElementById("sb-projects");
+      const sbProjectsList = document.getElementById("sb-projects-list");
+      const sbHistory = document.getElementById("sb-history");
+      const sbHistoryList = document.getElementById("sb-history-list");
+      const sidebarLogoutBtn = document.getElementById("sidebar-logout-btn");
+      const sidebarToggleBtn = document.getElementById("sidebar-toggle");
+      const layoutRoot = document.getElementById("layout-root");
+      const sbProfile = document.getElementById("sb-profile");
+      const profilePanel = document.getElementById("profile-panel");
+      const pfEmailEl = document.getElementById("pf-email");
+      const pfNameMain = document.getElementById("pf-name-main");
+      const pfHandle = document.getElementById("pf-handle");
+      const pfBio = document.getElementById("pf-bio");
+      const pfOldPass = document.getElementById("pf-old-pass");
+      const pfNewPass = document.getElementById("pf-new-pass");
+      const pfCloseBtn = document.getElementById("pf-close");
+      const pfSaveBtn = document.getElementById("pf-save");
+      const pfStatus = document.getElementById("pf-status");
+      const API_BASE =
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://localhost:8000"
+          : "https://vb-fgl8.onrender.com";
+      const HISTORY_KEY_BASE = "vibe-coding-history";
+      const AUTH_KEY = "vibecoder-auth-token";
       const MAX_HISTORY = 10;
+      let CURRENT_PROJECT_ID = null;
+      let CURRENT_USER_EMAIL = null;
+
+      function getToken() {
+        try { return localStorage.getItem(AUTH_KEY) || ""; } catch { return ""; }
+      }
+      function clearToken() {
+        try { localStorage.removeItem(AUTH_KEY); } catch {}
+      }
+      function getHistoryKey() {
+        const suffix = CURRENT_USER_EMAIL ? `:${CURRENT_USER_EMAIL}` : ":anon";
+        return HISTORY_KEY_BASE + suffix;
+      }
+
+      // Simple gate: if no token, send user to auth page
+      (function guard() {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "auth.html";
+        }
+      })();
+
+      async function fetchCurrentUser() {
+        const token = getToken();
+        if (!token) return;
+        try {
+          const res = await fetch(API_BASE + "/auth/profile", { headers: { Authorization: "Bearer " + token } });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.email) {
+            CURRENT_USER_EMAIL = String(data.email).toLowerCase();
+            if (pfEmailEl) pfEmailEl.textContent = data.email || "";
+            if (pfNameMain) pfNameMain.value = data.name || "";
+            if (pfHandle) pfHandle.value = data.handle || "";
+            if (pfBio) pfBio.value = data.bio || "";
+            renderHistory();
+          }
+        } catch {
+          // ignore; history will just use anon key
+        }
+      }
+
+      fetchCurrentUser();
+
+      if (sidebarToggleBtn && layoutRoot) {
+        sidebarToggleBtn.addEventListener("click", () => {
+          layoutRoot.classList.toggle("sidebar-collapsed");
+        });
+      }
+
+      const logoutTopBtn = document.getElementById("logout-top-btn");
+      function doLogout() {
+        clearToken();
+        window.location.href = "auth.html";
+      }
+      if (logoutTopBtn) {
+        logoutTopBtn.addEventListener("click", doLogout);
+      }
+      if (sidebarLogoutBtn) {
+        sidebarLogoutBtn.addEventListener("click", doLogout);
+      }
+
+      async function fetchProjects() {
+        const token = getToken();
+        if (!token) return;
+        let res = await fetch(API_BASE + "/projects", {
+          headers: { Authorization: "Bearer " + token },
+        });
+        let list = await res.json().catch(() => []);
+        if (!Array.isArray(list)) list = [];
+        if (list.length === 0) {
+          const body = JSON.stringify({ name: "Default" });
+          res = await fetch(API_BASE + "/projects", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body,
+          });
+          const created = await res.json().catch(() => null);
+          if (created && created.id) list = [created];
+        }
+        if (projectSelect) {
+          projectSelect.innerHTML = "";
+          list.forEach((p) => {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.textContent = p.name || "Untitled";
+            projectSelect.appendChild(opt);
+          });
+        }
+        if (sbProjectsList) {
+          sbProjectsList.innerHTML = "";
+          list.forEach((p) => {
+            const pill = document.createElement("div");
+            pill.textContent = p.name || "Untitled";
+            pill.className = "sidebar-project-pill" + (p.id === CURRENT_PROJECT_ID ? " active" : "");
+            pill.dataset.projectId = p.id;
+            sbProjectsList.appendChild(pill);
+            pill.addEventListener("click", () => {
+              CURRENT_PROJECT_ID = p.id;
+              if (projectSelect) projectSelect.value = p.id;
+              sbProjectsList.querySelectorAll(".sidebar-project-pill").forEach((el) => {
+                el.classList.toggle("active", el === pill);
+              });
+            });
+          });
+        }
+        if (list[0] && !CURRENT_PROJECT_ID) CURRENT_PROJECT_ID = list[0].id;
+      }
+
+      fetchProjects();
+
+      function openProjectForm() {
+        if (!projectForm) return;
+        projectForm.style.display = "block";
+        if (pfName) pfName.value = "";
+        if (pfDescription) pfDescription.value = "";
+        pfName?.focus();
+      }
+      function closeProjectForm() {
+        if (!projectForm) return;
+        projectForm.style.display = "none";
+      }
+
+      if (newProjectBtn) {
+        newProjectBtn.addEventListener("click", () => {
+          openProjectForm();
+        });
+      }
+      if (sbProjects) {
+        sbProjects.addEventListener("click", () => {
+          openProjectForm();
+        });
+      }
+      pfCancel?.addEventListener("click", () => {
+        closeProjectForm();
+      });
+      pfCreate?.addEventListener("click", async () => {
+        const name = (pfName?.value || "").trim();
+        const description = (pfDescription?.value || "").trim();
+        if (!name) return;
+        const token = getToken();
+        if (!token) return;
+        const res = await fetch(API_BASE + "/projects", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({ name, description }),
+        });
+        const created = await res.json().catch(() => null);
+        if (!created || !created.id) return;
+        closeProjectForm();
+        await fetchProjects();
+        if (projectSelect) {
+          projectSelect.value = created.id;
+        }
+        CURRENT_PROJECT_ID = created.id;
+      });
+
+      if (projectSelect) {
+        projectSelect.addEventListener("change", () => {
+          CURRENT_PROJECT_ID = projectSelect.value || null;
+        });
+      }
+
+      sbConsole?.addEventListener("click", () => {
+        document.querySelector("#card-generation")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      sbRecipes?.addEventListener("click", () => {
+        document.querySelector("#recipes-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      sbHistory?.addEventListener("click", () => {
+        document.querySelector("#recent-list")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      function openProfile() {
+        if (!profilePanel) return;
+        profilePanel.style.display = "block";
+        pfStatus.textContent = "";
+      }
+      function closeProfile() {
+        if (!profilePanel) return;
+        profilePanel.style.display = "none";
+      }
+      sbProfile?.addEventListener("click", openProfile);
+      pfCloseBtn?.addEventListener("click", closeProfile);
+      pfSaveBtn?.addEventListener("click", async () => {
+        const token = getToken();
+        if (!token) return;
+        pfStatus.textContent = "Saving...";
+        try {
+          const profileBody = {
+            name: pfNameMain?.value || null,
+            handle: pfHandle?.value || null,
+            bio: pfBio?.value || null,
+          };
+          let res = await fetch(API_BASE + "/auth/profile", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(profileBody),
+          });
+          let data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.detail || "Profile save failed");
+
+          if (pfOldPass?.value && pfNewPass?.value) {
+            res = await fetch(API_BASE + "/auth/change-password", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+              body: JSON.stringify({
+                old_password: pfOldPass.value,
+                new_password: pfNewPass.value,
+              }),
+            });
+            data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.detail || "Password change failed");
+            pfOldPass.value = "";
+            pfNewPass.value = "";
+          }
+
+          pfStatus.textContent = "Saved.";
+        } catch (e) {
+          pfStatus.textContent = e.message || "Save failed.";
+        }
+      });
 
       const TEMPLATES = [
         {
@@ -635,32 +1316,64 @@
       document.getElementById("retry-btn").addEventListener("click", () => { form.requestSubmit(); hideError(); });
 
       function getHistory() {
-        try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); } catch { return []; }
+        try { return JSON.parse(localStorage.getItem(getHistoryKey()) || "[]"); } catch { return []; }
       }
       function saveHistory(entry) {
         let list = getHistory();
         list.unshift({ ...entry, ts: Date.now() });
         list = list.slice(0, MAX_HISTORY);
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+        localStorage.setItem(getHistoryKey(), JSON.stringify(list));
         renderHistory();
       }
       function removeHistoryIndex(i) {
         let list = getHistory();
         list.splice(i, 1);
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+        localStorage.setItem(getHistoryKey(), JSON.stringify(list));
         renderHistory();
       }
       function renderHistory() {
         const list = getHistory();
-        recentList.innerHTML = list.map((e, i) => {
+        if (recentList) {
+          recentList.innerHTML = list.map((e, i) => {
           const snip = (e.prompt || "").slice(0, 42) + ((e.prompt || "").length > 42 ? "…" : "");
           return `<li class="recent-item" data-index="${i}"><span title="${(e.prompt || "").replace(/"/g, "&quot;")}">${snip}</span><button class="remove" data-index="${i}" aria-label="Remove">×</button></li>`;
         }).join("");
-        recentList.querySelectorAll(".recent-item").forEach((li) => {
-          const idx = Number(li.dataset.index);
-          li.querySelector("span").addEventListener("click", () => {
-            const entry = getHistory()[idx];
-            if (entry) {
+          recentList.querySelectorAll(".recent-item").forEach((li) => {
+            const idx = Number(li.dataset.index);
+            li.querySelector("span").addEventListener("click", () => {
+              const entry = getHistory()[idx];
+              if (entry) {
+                promptInput.value = entry.prompt || "";
+                if (entry.lua_code) {
+                  codeWrap.innerHTML = '<pre><code id="output" class="language-lua"></code></pre>';
+                  const out = document.getElementById("output");
+                  out.textContent = entry.lua_code;
+                  if (window.Prism) Prism.highlightElement(out);
+                }
+                if (descBox) {
+                  const text = (entry.description || "").trim();
+                  descBox.textContent = text;
+                  descBox.style.display = text ? "block" : "none";
+                }
+                cardStatus.textContent = "Loaded from history.";
+              }
+            });
+            li.querySelector(".remove").addEventListener("click", (e) => { e.stopPropagation(); removeHistoryIndex(idx); });
+          });
+        }
+        if (sbHistoryList) {
+          sbHistoryList.innerHTML = list
+            .slice(0, 5)
+            .map((e, i) => {
+              const snip = (e.prompt || "").slice(0, 30) + ((e.prompt || "").length > 30 ? "…" : "");
+              return `<div class="sidebar-project-pill" data-history-index="${i}">${snip}</div>`;
+            })
+            .join("");
+          sbHistoryList.querySelectorAll("[data-history-index]").forEach((el) => {
+            el.addEventListener("click", () => {
+              const idx = Number(el.getAttribute("data-history-index"));
+              const entry = getHistory()[idx];
+              if (!entry) return;
               promptInput.value = entry.prompt || "";
               if (entry.lua_code) {
                 codeWrap.innerHTML = '<pre><code id="output" class="language-lua"></code></pre>';
@@ -674,15 +1387,14 @@
                 descBox.style.display = text ? "block" : "none";
               }
               cardStatus.textContent = "Loaded from history.";
-            }
+            });
           });
-          li.querySelector(".remove").addEventListener("click", (e) => { e.stopPropagation(); removeHistoryIndex(idx); });
-        });
+        }
       }
       renderHistory();
 
-      document.getElementById("clear-history-btn").addEventListener("click", () => {
-        localStorage.setItem(HISTORY_KEY, "[]");
+      document.getElementById("clear-history-btn")?.addEventListener("click", () => {
+        localStorage.setItem(getHistoryKey(), "[]");
         renderHistory();
       });
 
@@ -767,6 +1479,101 @@
       }
       renderTemplates();
 
+      function showRecipeForm(kind) {
+        if (!recipesForm) return;
+        if (kind === "powerup") {
+          recipesForm.innerHTML = `
+            <div class="recipes-form-row">
+              <label for="recipe-power-type">Effect</label>
+              <select id="recipe-power-type">
+                <option value="health">Increase health</option>
+                <option value="speed">Increase walk speed</option>
+                <option value="jump">Increase jump power</option>
+              </select>
+            </div>
+            <div class="recipes-form-row">
+              <label for="recipe-amount">Amount</label>
+              <input id="recipe-amount" type="number" value="10" min="1" />
+            </div>
+            <div class="recipes-form-row">
+              <label for="recipe-part-name">Part name</label>
+              <input id="recipe-part-name" type="text" value="PowerUpPart" />
+            </div>
+            <div class="recipes-actions">
+              <button type="button" class="btn-cyan" id="recipe-apply">Use recipe</button>
+              <button type="button" class="btn-grey" id="recipe-cancel">Cancel</button>
+            </div>
+            <div class="recipes-note">We’ll fill the main prompt with a clear description for this power‑up.</div>
+          `;
+          const apply = document.getElementById("recipe-apply");
+          const cancel = document.getElementById("recipe-cancel");
+          apply?.addEventListener("click", () => {
+            const effect = /** @type {HTMLSelectElement|null} */ (document.getElementById("recipe-power-type"))?.value || "health";
+            const amount = /** @type {HTMLInputElement|null} */ (document.getElementById("recipe-amount"))?.value || "10";
+            const part = /** @type {HTMLInputElement|null} */ (document.getElementById("recipe-part-name"))?.value || "PowerUpPart";
+            let effectText = "";
+            if (effect === "health") effectText = `increase that player\u2019s Humanoid health by ${amount}`;
+            else if (effect === "speed") effectText = `temporarily increase that player\u2019s WalkSpeed by ${amount}`;
+            else effectText = `temporarily increase that player\u2019s JumpPower by ${amount}`;
+            const promptText =
+              `Create a touch power\u2011up in Roblox Studio.\n` +
+              `There is a Part named ${part} in Workspace. When a player touches it, ${effectText}.\n` +
+              `Make the script as small as possible and assume the Script is inside the ${part} part.`;
+            promptInput.value = promptText;
+            promptInput.focus();
+            recipesForm.style.display = "none";
+            cardStatus.textContent = "Recipe applied. You can tweak the text or click Generate.";
+          });
+          cancel?.addEventListener("click", () => {
+            recipesForm.style.display = "none";
+          });
+          recipesForm.style.display = "block";
+        } else if (kind === "coin") {
+          recipesForm.innerHTML = `
+            <div class="recipes-form-row">
+              <label for="recipe-coin-points">Points per coin</label>
+              <input id="recipe-coin-points" type="number" value="1" min="1" />
+            </div>
+            <div class="recipes-form-row">
+              <label for="recipe-coin-name">Coin part name</label>
+              <input id="recipe-coin-name" type="text" value="Coin" />
+            </div>
+            <div class="recipes-actions">
+              <button type="button" class="btn-cyan" id="recipe-apply">Use recipe</button>
+              <button type="button" class="btn-grey" id="recipe-cancel">Cancel</button>
+            </div>
+            <div class="recipes-note">We\u2019ll ask the model for a tiny coin pickup script that works with leaderstats Points.</div>
+          `;
+          const apply = document.getElementById("recipe-apply");
+          const cancel = document.getElementById("recipe-cancel");
+          apply?.addEventListener("click", () => {
+            const points = /** @type {HTMLInputElement|null} */ (document.getElementById("recipe-coin-points"))?.value || "1";
+            const name = /** @type {HTMLInputElement|null} */ (document.getElementById("recipe-coin-name"))?.value || "Coin";
+            const promptText =
+              `Create a minimal Roblox Lua script for a coin pickup.\n` +
+              `There is a Part named ${name} in Workspace. When a player touches it, give that player +${points} Points in leaderstats and optionally destroy the coin.\n` +
+              `Assume the Script is inside the ${name} part. Do not add extra features.`;
+            promptInput.value = promptText;
+            promptInput.focus();
+            recipesForm.style.display = "none";
+            cardStatus.textContent = "Recipe applied. You can tweak the text or click Generate.";
+          });
+          cancel?.addEventListener("click", () => {
+            recipesForm.style.display = "none";
+          });
+          recipesForm.style.display = "block";
+        }
+      }
+
+      if (recipesList) {
+        recipesList.querySelectorAll(".recipe-item").forEach((el) => {
+          el.addEventListener("click", () => {
+            const kind = el.getAttribute("data-recipe");
+            if (kind) showRecipeForm(kind);
+          });
+        });
+      }
+
       function setOutput(lua, description) {
         if (descBox) {
           const text = (description || "").trim();
@@ -779,6 +1586,7 @@
         const out = document.getElementById("output");
         out.textContent = lua;
         if (window.Prism) Prism.highlightElement(out);
+        updatePlacementAndSafety(lua);
       }
 
       form.addEventListener("submit", async (e) => {
@@ -803,7 +1611,10 @@
 
           const res = await fetch(API_BASE + "/generate-script", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              ...(getToken() ? { Authorization: "Bearer " + getToken() } : {}),
+            },
             body: JSON.stringify({ prompt, style: null, max_tokens: 1500, image_data_list: imageDataList }),
           });
 
@@ -839,6 +1650,41 @@
       }
 
       document.getElementById("copy-lua-btn").addEventListener("click", copyCode);
+
+      function updatePlacementAndSafety(luaText) {
+        const sections = parseLuaScriptSections(luaText);
+        if (placementSummary) {
+          if (!sections.length) {
+            placementSummary.textContent = "";
+          } else {
+            const parts = sections.map((s) => s.path);
+            placementSummary.textContent = "Placement: " + parts.join(" • ");
+          }
+        }
+        if (safetyPill) {
+          const text = String(luaText || "").toLowerCase();
+          let score = 0;
+          const riskyPatterns = [
+            /:destroy\s*\(/i,
+            /game\.Players:Kick/i,
+            /DataStoreService/i,
+            /while\s+true\s+do/i,
+          ];
+          riskyPatterns.forEach((re) => {
+            if (re.test(text)) score += 1;
+          });
+          const lines = text.split("\n").length;
+          if (lines > 200) score += 1;
+          safetyPill.classList.remove("on");
+          if (score === 0) {
+            safetyPill.textContent = "Looks safe";
+            safetyPill.style.background = "rgba(22, 163, 74, 0.35)";
+          } else {
+            safetyPill.textContent = "Review first";
+            safetyPill.style.background = "rgba(234, 179, 8, 0.35)";
+          }
+        }
+      }
 
       function parseLuaScriptSections(luaText) {
         const text = String(luaText || "").replace(/\r\n/g, "\n");

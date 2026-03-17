@@ -804,9 +804,6 @@
         </div>
         <div class="sidebar-footer">
           <div class="sidebar-item" id="sb-profile">Profile</div>
-          <button type="button" class="sidebar-logout-btn" id="sidebar-logout-btn">
-            <span>Log out</span>
-          </button>
         </div>
       </aside>
       <div class="app">
@@ -851,24 +848,15 @@
         <h3>Your profile</h3>
         <div class="pf-row">
           <label>Email</label>
-          <div id="pf-email" style="font-size:0.85rem; color:#cbd5e1;"></div>
+          <input id="pf-email-input" type="email" placeholder="you@example.com" />
         </div>
         <div class="pf-row">
           <label for="pf-name-main">Name</label>
           <input id="pf-name-main" type="text" />
         </div>
         <div class="pf-row">
-          <label for="pf-handle">User id</label>
-          <input id="pf-handle" type="text" placeholder="@vibecoder" />
-        </div>
-        <div class="pf-row">
           <label for="pf-bio">About</label>
           <textarea id="pf-bio" placeholder="Short description"></textarea>
-        </div>
-        <div class="pf-row">
-          <label>Change password</label>
-          <input id="pf-old-pass" type="password" placeholder="Current password" />
-          <input id="pf-new-pass" type="password" placeholder="New password" />
         </div>
         <div class="project-form-actions">
           <button type="button" class="btn-grey" id="pf-close">Close</button>
@@ -1010,17 +998,13 @@
       const sbProjectsList = document.getElementById("sb-projects-list");
       const sbHistory = document.getElementById("sb-history");
       const sbHistoryList = document.getElementById("sb-history-list");
-      const sidebarLogoutBtn = document.getElementById("sidebar-logout-btn");
       const sidebarToggleBtn = document.getElementById("sidebar-toggle");
       const layoutRoot = document.getElementById("layout-root");
       const sbProfile = document.getElementById("sb-profile");
       const profilePanel = document.getElementById("profile-panel");
-      const pfEmailEl = document.getElementById("pf-email");
+      const pfEmailInput = document.getElementById("pf-email-input");
       const pfNameMain = document.getElementById("pf-name-main");
-      const pfHandle = document.getElementById("pf-handle");
       const pfBio = document.getElementById("pf-bio");
-      const pfOldPass = document.getElementById("pf-old-pass");
-      const pfNewPass = document.getElementById("pf-new-pass");
       const pfCloseBtn = document.getElementById("pf-close");
       const pfSaveBtn = document.getElementById("pf-save");
       const pfStatus = document.getElementById("pf-status");
@@ -1045,25 +1029,39 @@
         return HISTORY_KEY_BASE + suffix;
       }
 
-      // Simple gate: if no token, send user to auth page
-      (function guard() {
-        const token = getToken();
-        if (!token) {
-          window.location.href = "auth.html";
+      // Demo mode: no forced sign-in. If a token exists, we'll use it; otherwise we work locally.
+
+      const LOCAL_PROFILE_KEY = "vb-local-profile";
+      function loadLocalProfile() {
+        try {
+          const raw = localStorage.getItem(LOCAL_PROFILE_KEY) || "{}";
+          return JSON.parse(raw) || {};
+        } catch {
+          return {};
         }
-      })();
+      }
+      function saveLocalProfile(p) {
+        try { localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(p || {})); } catch {}
+      }
 
       async function fetchCurrentUser() {
         const token = getToken();
-        if (!token) return;
+        if (!token) {
+          const p = loadLocalProfile();
+          if (pfEmailInput) pfEmailInput.value = p.email || "";
+          if (pfNameMain) pfNameMain.value = p.name || "";
+          if (pfBio) pfBio.value = p.bio || "";
+          CURRENT_USER_EMAIL = (p.email || "").toLowerCase() || null;
+          renderHistory();
+          return;
+        }
         try {
           const res = await fetch(API_BASE + "/auth/profile", { headers: { Authorization: "Bearer " + token } });
           const data = await res.json().catch(() => ({}));
           if (res.ok && data.email) {
             CURRENT_USER_EMAIL = String(data.email).toLowerCase();
-            if (pfEmailEl) pfEmailEl.textContent = data.email || "";
+            if (pfEmailInput) pfEmailInput.value = data.email || "";
             if (pfNameMain) pfNameMain.value = data.name || "";
-            if (pfHandle) pfHandle.value = data.handle || "";
             if (pfBio) pfBio.value = data.bio || "";
             renderHistory();
           }
@@ -1080,21 +1078,69 @@
         });
       }
 
-      const logoutTopBtn = document.getElementById("logout-top-btn");
-      function doLogout() {
-        clearToken();
-        window.location.href = "auth.html";
+      // Logout removed from UI in demo mode
+
+      const LOCAL_PROJECTS_KEY = "vb-local-projects";
+      function loadLocalProjects() {
+        try {
+          const raw = localStorage.getItem(LOCAL_PROJECTS_KEY) || "[]";
+          const list = JSON.parse(raw);
+          if (Array.isArray(list) && list.length) return list;
+        } catch {}
+        const def = [{ id: "default", name: "Default", description: "" }];
+        try { localStorage.setItem(LOCAL_PROJECTS_KEY, JSON.stringify(def)); } catch {}
+        return def;
       }
-      if (logoutTopBtn) {
-        logoutTopBtn.addEventListener("click", doLogout);
+      function saveLocalProjects(list) {
+        try { localStorage.setItem(LOCAL_PROJECTS_KEY, JSON.stringify(list)); } catch {}
       }
-      if (sidebarLogoutBtn) {
-        sidebarLogoutBtn.addEventListener("click", doLogout);
+
+      function getCurrentProjectName() {
+        const id = CURRENT_PROJECT_ID || "default";
+        const token = getToken();
+        if (!token) {
+          const list = loadLocalProjects();
+          const p = list.find((x) => x.id === id);
+          return (p?.name || "Default").trim();
+        }
+        const opt = projectSelect?.selectedOptions?.[0];
+        return (opt?.textContent || "Project").trim();
       }
 
       async function fetchProjects() {
         const token = getToken();
-        if (!token) return;
+        if (!token) {
+          const list = loadLocalProjects();
+          if (projectSelect) {
+            projectSelect.innerHTML = "";
+            list.forEach((p) => {
+              const opt = document.createElement("option");
+              opt.value = p.id;
+              opt.textContent = p.name || "Untitled";
+              projectSelect.appendChild(opt);
+            });
+          }
+          if (sbProjectsList) {
+            sbProjectsList.innerHTML = "";
+            list.forEach((p) => {
+              const pill = document.createElement("div");
+              pill.textContent = p.name || "Untitled";
+              pill.className = "sidebar-project-pill" + (p.id === CURRENT_PROJECT_ID ? " active" : "");
+              pill.dataset.projectId = p.id;
+              sbProjectsList.appendChild(pill);
+              pill.addEventListener("click", () => {
+                CURRENT_PROJECT_ID = p.id;
+                if (projectSelect) projectSelect.value = p.id;
+                sbProjectsList.querySelectorAll(".sidebar-project-pill").forEach((el) => {
+                  el.classList.toggle("active", el === pill);
+                });
+              });
+            });
+          }
+          if (!CURRENT_PROJECT_ID) CURRENT_PROJECT_ID = list[0]?.id || "default";
+          if (projectSelect) projectSelect.value = CURRENT_PROJECT_ID;
+          return;
+        }
         let res = await fetch(API_BASE + "/projects", {
           headers: { Authorization: "Bearer " + token },
         });
@@ -1174,7 +1220,17 @@
         const description = (pfDescription?.value || "").trim();
         if (!name) return;
         const token = getToken();
-        if (!token) return;
+        if (!token) {
+          const list = loadLocalProjects();
+          const id = "p_" + Math.random().toString(36).slice(2, 10);
+          list.unshift({ id, name, description });
+          saveLocalProjects(list);
+          closeProjectForm();
+          await fetchProjects();
+          if (projectSelect) projectSelect.value = id;
+          CURRENT_PROJECT_ID = id;
+          return;
+        }
         const res = await fetch(API_BASE + "/projects", {
           method: "POST",
           headers: {
@@ -1196,6 +1252,12 @@
       if (projectSelect) {
         projectSelect.addEventListener("change", () => {
           CURRENT_PROJECT_ID = projectSelect.value || null;
+          // keep sidebar highlight in sync in local mode
+          if (!getToken() && sbProjectsList) {
+            sbProjectsList.querySelectorAll(".sidebar-project-pill").forEach((el) => {
+              el.classList.toggle("active", el.dataset.projectId === CURRENT_PROJECT_ID);
+            });
+          }
         });
       }
 
@@ -1222,12 +1284,23 @@
       pfCloseBtn?.addEventListener("click", closeProfile);
       pfSaveBtn?.addEventListener("click", async () => {
         const token = getToken();
-        if (!token) return;
+        if (!token) {
+          const p = {
+            email: (pfEmailInput?.value || "").trim() || (CURRENT_USER_EMAIL || ""),
+            name: (pfNameMain?.value || "").trim(),
+            bio: (pfBio?.value || "").trim(),
+          };
+          // allow editing email in demo mode by clicking the email line
+          saveLocalProfile(p);
+          CURRENT_USER_EMAIL = (p.email || "").toLowerCase() || null;
+          renderHistory();
+          pfStatus.textContent = "Saved.";
+          return;
+        }
         pfStatus.textContent = "Saving...";
         try {
           const profileBody = {
             name: pfNameMain?.value || null,
-            handle: pfHandle?.value || null,
             bio: pfBio?.value || null,
           };
           let res = await fetch(API_BASE + "/auth/profile", {
@@ -1240,24 +1313,6 @@
           });
           let data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.detail || "Profile save failed");
-
-          if (pfOldPass?.value && pfNewPass?.value) {
-            res = await fetch(API_BASE + "/auth/change-password", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
-              },
-              body: JSON.stringify({
-                old_password: pfOldPass.value,
-                new_password: pfNewPass.value,
-              }),
-            });
-            data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data.detail || "Password change failed");
-            pfOldPass.value = "";
-            pfNewPass.value = "";
-          }
 
           pfStatus.textContent = "Saved.";
         } catch (e) {
@@ -1721,10 +1776,21 @@
         if (!text) return;
         const a = document.createElement("a");
         a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
-        a.download = "game.lua";
+        const rawUser =
+          (pfNameMain?.value || "").trim() ||
+          (pfEmailInput?.value || "").split("@")[0].trim() ||
+          "user";
+        const rawProject = getCurrentProjectName() || "Default";
+        const safe = (s) =>
+          String(s || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .slice(0, 40) || "x";
+        a.download = `${safe(rawUser)}-${safe(rawProject)}.lua`;
         a.click();
         URL.revokeObjectURL(a.href);
-        cardStatus.textContent = "Downloaded game.lua";
+        cardStatus.textContent = `Downloaded ${a.download}`;
         setTimeout(() => { cardStatus.textContent = ""; }, 2000);
       }
       document.getElementById("download-lua-btn").addEventListener("click", doDownload);
